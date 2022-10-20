@@ -5,7 +5,7 @@ module.exports = sequelize => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: "compositeIndex"
     },
     description: {
       type: DataTypes.TEXT
@@ -13,7 +13,20 @@ module.exports = sequelize => {
     mana_cost: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      unique: true
+      unique: "compositeIndex",
+      validate: {
+        min: 10,
+        max: 250
+        // customValidator(value){
+        //   if(value < 10 || value > 250) throw new Error("Este es un mana invalido");
+        // }
+      }
+    },
+    summary: {
+      type: DataTypes.VIRTUAL,
+      get(){
+        return `${this.name}(${Math.floor(this.mana_cost)} points of mana) - Description: ${this.description}`
+      }
     }
   })
 }
